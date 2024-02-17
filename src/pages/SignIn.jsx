@@ -29,8 +29,6 @@ export default function SignIn() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     //setLoading(true);
-    loading(true);
-
     try {
       dispatch(signInStart());
 
@@ -65,14 +63,14 @@ export default function SignIn() {
       <form onSubmit={handleSubmit} className='flex flex-col gap-4'>
         <input
           type='email'
-          placeholder='username'
+          placeholder='e-mail'
           className='border p-3 rounded-lg'
           id='email'
           onChange={handleChange}
         />
         <input
           type='password'
-          placeholder='username'
+          placeholder='password'
           className='border p-3 rounded-lg'
           id='password'
           onChange={handleChange}
