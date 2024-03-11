@@ -10,12 +10,14 @@ import CreateListing from './pages/ListingCreate';
 import UpdateListing from './pages/ListingUpdate';
 import Listing from './pages/Listing';
 import Search from './pages/Search';
+import NotFound from './pages/NotFound';
 
 export default function App() {
   return (
     <BrowserRouter>
       <Header />
       <Routes>
+        <Route path='*' element={<NotFound />} />
         <Route path='/' element={<Home />} />
         <Route path='/sign-in' element={<SignIn />} />
         <Route path='/sign-up' element={<SignUp />} />
