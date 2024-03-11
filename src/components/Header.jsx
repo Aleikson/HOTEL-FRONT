@@ -1,9 +1,33 @@
 import { FaSearch } from 'react-icons/fa';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
+import { useEffect, useState } from 'react';
 
 function Header() {
   const { currentUser } = useSelector((state) => state.user);
+  const [search, setsearch] = useState('');
+
+  const navigate = useNavigate();
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    const urlParams = new URLSearchParams(window.location.search);
+    urlParams.set('search', search);
+
+    const searchQuery = urlParams.toString();
+
+    navigate(`/search?${searchQuery}`);
+  };
+
+  useEffect(() => {
+    const urlParams = new URLSearchParams(location.search);
+    const searchFromUrl = urlParams.get('seachTerm');
+
+    if (searchFromUrl) {
+      setsearch(searchFromUrl);
+    }
+  }, []);
 
   return (
     <header className='bg-neutral shadow-md'>
@@ -15,13 +39,19 @@ function Header() {
           </h1>
         </Link>
 
-        <form className='bg-white p-3 rounded-lg flex items-center'>
+        <form
+          className='bg-white p-3 rounded-lg flex items-center'
+          onSubmit={handleSubmit}
+        >
           <input
             type='text'
             placeholder='Search...'
+            value={search}
             className='bg-trasparent focus:outline-none w-24 sm:w-64'
           />
-          <FaSearch className='text-secondary' />
+          <button>
+            <FaSearch className='text-secondary' />
+          </button>
         </form>
         <ul className='flex gap-4'>
           <Link to='/'>
