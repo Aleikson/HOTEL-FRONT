@@ -18,6 +18,7 @@ function Header() {
     const searchQuery = urlParams.toString();
 
     navigate(`/search?${searchQuery}`);
+    setsearch('')
   };
 
   useEffect(() => {
@@ -34,7 +35,7 @@ function Header() {
       <div className='flex justify-between items-center max-w-6xl mx-auto p-3'>
         <Link to='/'>
           <h1 className='font-bold text-sm sm:text-xl flex flex-wrap'>
-            <span className='text-secondary'>Hotel</span>
+            <span className='text-secondary'>House</span>
             <span className='text-primary'>Bay</span>
           </h1>
         </Link>
@@ -47,9 +48,10 @@ function Header() {
             type='text'
             placeholder='Search...'
             value={search}
+            onChange={(e) => setsearch(e.target.value)}
             className='bg-trasparent focus:outline-none w-24 sm:w-64'
           />
-          <button>
+          <button type='submit'>
             <FaSearch className='text-secondary' />
           </button>
         </form>
