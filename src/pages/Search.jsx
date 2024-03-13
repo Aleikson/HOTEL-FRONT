@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import ItemListing from '../components/ItemListing'
 
-export default function Search(propSearch) {
+export default function Search() {
   const navigate = useNavigate();
 
   const [sidedata, setSidedata] = useState({
@@ -57,7 +57,7 @@ export default function Search(propSearch) {
       setLoading(false);
     };
     fetchListing();
-  }, []);
+  }, [location.search]);
 
   const handleChange = (e) => {
     if (
