@@ -62,8 +62,8 @@ function Header() {
             </li>
           </Link>
           <Link to='/about'>
-            <li className='hidden sm:inline text-primary hover:underline'>
-              About
+            <li className=' sm:inline text-primary hover:underline'>
+              About Us
             </li>
           </Link>
           <Link to='/profile'>
