@@ -18,7 +18,10 @@ import {
   updateUserFailure,
   updateUserSuccess,
 } from '../redux/user/userSlice';
+import Dialog from '../components/Dialog';
 import { Link } from 'react-router-dom';
+import { FaRegTrashCan } from 'react-icons/fa6';
+import { FaRegEdit } from 'react-icons/fa';
 
 export default function Profile() {
   const { currentUser, loading, error } = useSelector((state) => state.user);
@@ -30,6 +33,10 @@ export default function Profile() {
   const [updateSuccess, setUpdateSuccess] = useState(false);
   const [showListingsError, setShowListingsError] = useState(false);
   const [userListings, setUserListings] = useState([]);
+  const [showListings, setShowListings] = useState(false);
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+  const [selectedListingId, setSelectedListingId] = useState(null);
+  const [deleteUserDialogOpen, setDeleteUserDialogOpen] = useState(false);
 
   const dispatch = useDispatch();
 
@@ -126,14 +133,18 @@ export default function Profile() {
   const handleShowListings = async () => {
     try {
       setShowListingsError(false);
-      const response = await fetch(`/api/user/listings/${currentUser._id}`);
-      const data = await response.json();
-      if (data.success === false) {
-        setShowListingsError(true);
-        return;
+      setShowListings((prevState) => !prevState);
+      if (!showListings) {
+        const response = await fetch(`/api/user/listings/${currentUser._id}`);
+        const data = await response.json();
+        if (data.success === false) {
+          setShowListingsError(true);
+          return;
+        }
+        setUserListings(data);
+      } else {
+        setUserListings([]);
       }
-
-      setUserListings(data);
     } catch (error) {
       setShowListingsError(true);
     }
@@ -158,9 +169,34 @@ export default function Profile() {
     }
   };
 
+  const handleDeleteConfirm = () => {
+    if (selectedListingId) {
+      handleListingDelete(selectedListingId);
+    } else {
+      handleDeleteUser();
+    }
+    setDeleteModalOpen(false);
+  };
+
+  const handleDeleteUserDialogOpen = () => {
+    setDeleteUserDialogOpen(true);
+  };
+
   return (
     <div className='p-3 max-w-lg mx-auto'>
       <h1 className='text-3xl font-semibold text-center my-7'>My Profile</h1>
+      <Dialog
+        isOpen={deleteModalOpen}
+        onClose={() => setDeleteModalOpen(false)}
+        message='Are you sure you want to delete this listing?'
+        onProceed={handleDeleteConfirm}
+      />
+      <Dialog
+        isOpen={deleteUserDialogOpen}
+        onClose={() => setDeleteUserDialogOpen(false)}
+        message='Are you sure you want to delete your account? This action cannot be undone.'
+        onProceed={handleDeleteUser}
+      />
       <form onSubmit={handleSubmit} className='flex flex-col gap-4'>
         <input
           onChange={(e) => setFile(e.target.files[0])}
@@ -227,7 +263,7 @@ export default function Profile() {
       </form>
       <div className='flex justify-between mt-5'>
         <span
-          onClick={handleDeleteUser}
+          onClick={handleDeleteUserDialogOpen}
           className='text-red-700 cursor-pointer'
         >
           Delete account
@@ -241,7 +277,7 @@ export default function Profile() {
         {updateSuccess ? 'User is updated successfully!' : ''}
       </p>
       <button onClick={handleShowListings} className='text-green-700 w-full'>
-        Show Listings
+        {showListings ? 'Hide Listings' : 'Show Listings'}
       </button>
       <p className='text-red-700 mt-5'>
         {showListingsError ? 'Error showing listings' : ''}
@@ -272,19 +308,29 @@ export default function Profile() {
               </Link>
 
               <div className='flex flex-col item-center'>
-                <button
-                  onClick={() => handleListingDelete(listing._id)}
-                  className='text-red-700 uppercase'
-                >
-                  Delete
-                </button>
                 <Link to={`/update-listing/${listing._id}`}>
-                  <button className='text-green-700 uppercase'>Edit</button>
+                  <button className='text-green-700 flex items-center'>
+                    Edit <FaRegEdit className='ml-2' />
+                  </button>
                 </Link>
+                <button
+                  onClick={() => {
+                    setSelectedListingId(listing._id);
+                    setDeleteModalOpen(true);
+                  }}
+                  className='text-red-700 flex items-center'
+                >
+                  Delete <FaRegTrashCan className='ml-2' />
+                </button>
               </div>
             </div>
           ))}
         </div>
+      )}
+      {showListings && (!userListings || userListings.length === 0) && (
+        <p className='text-center mt-7 text-red-600'>
+          You don&apos;t have listings
+        </p>
       )}
     </div>
   );
