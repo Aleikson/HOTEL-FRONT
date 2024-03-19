@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import ItemListing from '../components/ItemListing'
+import ItemListing from '../components/ItemListing';
 
 export default function Search() {
   const navigate = useNavigate();
@@ -17,6 +17,7 @@ export default function Search() {
 
   const [loading, setLoading] = useState(false);
   const [listings, setListings] = useState([]);
+  const [showMore, setShowMore] = useState(false);
 
   useEffect(() => {
     const urlParams = new URLSearchParams(location.search);
@@ -48,15 +49,22 @@ export default function Search() {
       });
     }
 
-    const fetchListing = async () => {
+    const fetchListings = async () => {
       setLoading(true);
+      setShowMore(false);
       const searchQuery = urlParams.toString();
-      const response = await fetch(`/api/listing/get?${searchQuery}`);
-      const data = await response.json();
+      const res = await fetch(`/api/listing/get?${searchQuery}`);
+      const data = await res.json();
+      if (data.length > 8) {
+        setShowMore(true);
+      } else {
+        setShowMore(false);
+      }
       setListings(data);
       setLoading(false);
     };
-    fetchListing();
+
+    fetchListings();
   }, [location.search]);
 
   const handleChange = (e) => {
@@ -105,6 +113,20 @@ export default function Search() {
     urlParams.set('order', sidedata.order);
     const searchQuery = urlParams.toString();
     navigate(`/search?${searchQuery}`);
+  };
+
+  const onShowMoreClick = async () => {
+    const numberOfListings = listings.length;
+    const startIndex = numberOfListings;
+    const urlParams = new URLSearchParams(location.search);
+    urlParams.set('startIndex', startIndex);
+    const searchQuery = urlParams.toString();
+    const res = await fetch(`/api/listing/get?${searchQuery}`);
+    const data = await res.json();
+    if (data.length < 9) {
+      setShowMore(false);
+    }
+    setListings([...listings, ...data]);
   };
 
   return (
@@ -212,10 +234,10 @@ export default function Search() {
         </h1>
         <div className='p-7 flex flex-wrap gap-4'>
           {!loading && listings.length === 0 && (
-            <p className='text-xl text-primary'>No listing found!</p>
+            <p className='text-xl text-slate-700'>No listing found!</p>
           )}
           {loading && (
-            <p className='text-xl text-primary text-center w-full'>
+            <p className='text-xl text-slate-700 text-center w-full'>
               Loading...
             </p>
           )}
@@ -225,6 +247,15 @@ export default function Search() {
             listings.map((listing) => (
               <ItemListing key={listing._id} listing={listing} />
             ))}
+
+          {showMore && (
+            <button
+              onClick={onShowMoreClick}
+              className='text-green-700 hover:underline p-7 text-center w-full'
+            >
+              Show more
+            </button>
+          )}
         </div>
       </div>
     </div>
