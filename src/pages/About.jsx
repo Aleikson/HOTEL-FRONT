@@ -9,7 +9,7 @@ export default function About() {
         About the House Bay Project
       </h1>
       <p className='mb-4 text-primary'>
-        About the House Bay Project The House Bay project is a fullstack web
+        The House Bay project is a fullstack web
         application built using React and Node.js technologies, with styling
         entirely implemented in Tailwind CSS. Its primary objective is to serve
         as a platform for listing rental and sale properties, along with
