@@ -4,7 +4,7 @@
 ![GitHub language count](https://img.shields.io/github/languages/count/Aleikson/HOTEL-FRONT?style=for-the-badge)
 ![GitHub forks](https://img.shields.io/github/forks/Aleikson/HOTEL-FRONT?style=for-the-badge)
 
-<img src="../client/src/assets/img-readme.png" alt="Example image">
+<img src="./README.png" alt="Example image">
 
 > The project aims to provide a platform for accommodation bookings, offering functionalities for searching, viewing, and booking different lodging options in various destinations.
 
@@ -64,6 +64,6 @@ This is a fullstack project made with these technologies.
 
 Aleikson Silva - [LinkedIn](https://www.linkedin.com/in/aleikson-frontend/)
 
-Project Link: -
+Project Link: - [Website Link](https://house-bay.onrender.com/)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
